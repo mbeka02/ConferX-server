@@ -2,7 +2,6 @@ import express, { json } from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import dotenv from "dotenv";
-import connectDB from "./database/connector.js";
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -15,7 +14,6 @@ app.use(json());
 app.get("/", (req, res) => {
     res.status(200).json({ msg: "API" });
 });
-//const rooms: { [key: string]: string[] } = {};
 io.on("connection", (socket) => {
     // join room,event add socket.id to arr
     socket.on("join_room", async (roomId) => {
@@ -39,21 +37,6 @@ io.on("connection", (socket) => {
         if (SOCKETS.length > 1) {
             socket.to(roomId).emit("otherUserJoined");
         }
-        /* if (rooms[roomId]) {
-          rooms[roomId].push(socket.id);
-          // console.log(rooms[roomId]);
-        } else {
-          rooms[roomId] = [socket.id];
-        }
-        //find other socket.id in array , array can only have two id's (for now)
-        const otherPerson = rooms[roomId].find((id) => id !== socket.id);
-        // console.log(otherPerson);
-    
-        //if other person is there in the room
-        if (otherPerson) {
-          socket.emit("other_person", otherPerson);
-          socket.to(otherPerson).emit("joined", socket.id);
-        }*/
     });
     socket.on("offer", (payload) => {
         socket.to(payload.roomId).emit("offer", payload);
@@ -71,7 +54,7 @@ const connectionstring = process.env.DEVDB;
 //only spin up server if con has been established
 httpServer.listen(port, async () => {
     try {
-        await connectDB(connectionstring);
+        // await connectDB(connectionstring);
         console.log(`Server is listening on port:${port}`);
     }
     catch (error) {
