@@ -1,6 +1,7 @@
 import express, { Express, Request, Response, json } from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import roomRouter from "./routes/roomRoutes.js";
 
 import dotenv from "dotenv";
 import connectDB from "./database/connector.js";
@@ -15,6 +16,7 @@ const io = new Server(httpServer, {
 dotenv.config();
 
 app.use(json());
+app.use("/api/v1/room", roomRouter);
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({ msg: "API" });
 });
@@ -57,12 +59,12 @@ io.on("connection", (socket) => {
 
 const port = 3000;
 //type assertion for string env variable
-const connectionstring: string = process.env.DEVDB as string;
+const connectionstring = process.env.DEVDB as string;
 
 //only spin up server if con has been established
 httpServer.listen(port, async () => {
   try {
-    // await connectDB(connectionstring);
+    await connectDB(connectionstring);
     console.log(`Server is listening on port:${port}`);
   } catch (error) {
     console.log(error);
