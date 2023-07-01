@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
-import Room from "../models/room.js";
+import { Public, Private } from "../models/room.js";
 
-const createRoom = async (req: Request, res: Response) => {
-  await Room.create(req.body);
+const createPublicRoom = async (req: Request, res: Response) => {
+  const { topic, roomType } = req.body;
+  await Public.create({ topic, roomType });
   res.status(201).json({ msg: "Room created" });
 };
 
-export { createRoom };
+export { createPublicRoom };

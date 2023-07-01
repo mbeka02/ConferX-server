@@ -1,7 +1,8 @@
-import Room from "../models/room.js";
-const createRoom = async (req, res) => {
-    await Room.create(req.body);
+import { Public } from "../models/room.js";
+const createPublicRoom = async (req, res) => {
+    const { topic, roomType } = req.body;
+    await Public.create({ topic, roomType });
     res.status(201).json({ msg: "Room created" });
 };
-export { createRoom };
+export { createPublicRoom };
 //# sourceMappingURL=roomController.js.map
