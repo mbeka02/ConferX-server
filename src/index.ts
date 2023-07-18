@@ -89,11 +89,13 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     const roomId = socketToRoom[socket.id];
+    //console.log("disconnect event for:" + roomId);
 
     let room = rooms[roomId];
     //filter out the socket.id  on disconnect
+
     if (room) {
-      room.filter((id) => id !== socket.id);
+      room = room.filter((id) => id !== socket.id);
       rooms[roomId] = room;
     }
   });
